@@ -121,8 +121,9 @@ local findOther = function(filename, context)
 			local result, _ = fn:gsub(mapping.pattern, function(...)
 				local captureds = { ... }
 				local transformed_parts = {}
-				for _, part in ipairs(captureds) do
-					local transformed_part = mapping.transformer and options.transformers[mapping.transformer](part) or part
+				for index, part in ipairs(captureds) do
+					local transformer = mapping.transformer or (mapping.transformers and mapping.transformers[index])
+					local transformed_part = transformer and options.transformers[transformer](part) or part
 					table.insert(transformed_parts, transformed_part)
 				end
 				return mapping.target:gsub("%%(%d)", function(n)
